@@ -7,6 +7,7 @@ import {createLoadMoreButtonTemplate} from './components/load-more-button';
 import {createSiteMenuTemplate} from './components/site-menu';
 import {createTaskEditTemplate} from './components/task-edit';
 import {createTaskTemplate} from './components/task';
+import {generateFilters} from './mock/filter';
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -15,7 +16,8 @@ const render = (container, template, place) => {
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
-render(siteMainElement, createFilterTemplate(), `beforeend`);
+const filters = generateFilters();
+render(siteMainElement, createFilterTemplate(filters), `beforeend`);
 render(siteHeaderElement, createSiteMenuTemplate(), `beforeend`);
 render(siteMainElement, createBoardTemplate(), `beforeend`);
 
