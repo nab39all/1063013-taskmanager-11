@@ -5,12 +5,12 @@ import {createSiteMenuTemplate} from './components/site-menu';
 import {createTaskEditTemplate} from './components/task-edit';
 import {createTaskTemplate} from './components/task';
 
-import {generateFilters} from './mock/filter';
 import {generateTasks} from './mock/task';
 
-const TASK_COUNT = 22;
+const TASK_COUNT = 10;
 const SHOWING_TASKS_COUNT_ON_START = 8;
 const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
+const tasks = generateTasks(TASK_COUNT);
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -19,8 +19,26 @@ const render = (container, template, place) => {
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
-const filters = generateFilters();
-const tasks = generateTasks(TASK_COUNT);
+const filters = [{
+  name: `all`,
+  count: TASK_COUNT
+}, {
+  name: `overdue`,
+  count: tasks.reduce((count, task) => new Date() < task.dueDate ? count + 1 : count, 0)
+}, {
+  name: `today`,
+  count: tasks.reduce((count, task) => task.dueDate === null ? count + 1 : count, 0)
+}, {
+  name: `favorites`,
+  count: tasks.reduce((count, task) => task.isFavorite ? count + 1 : count, 0)
+}, {
+  name: `repeating`,
+  count: tasks.reduce((count, task) => task.repeatingDays[`mo`] === false ? count + 1 : count, 0)
+}, {
+  name: `archive`,
+  count: tasks.reduce((count, task) => task.isArchive ? count + 1 : count, 0)
+}];
+
 render(siteMainElement, createFilterTemplate(filters), `beforeend`);
 render(siteHeaderElement, createSiteMenuTemplate(), `beforeend`);
 render(siteMainElement, createBoardTemplate(), `beforeend`);
